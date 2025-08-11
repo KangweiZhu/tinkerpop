@@ -20,6 +20,7 @@ package org.apache.tinkerpop.gremlin.process.traversal.dsl.graph;
 
 import org.apache.tinkerpop.gremlin.process.traversal.DT;
 import org.apache.tinkerpop.gremlin.process.traversal.P;
+import org.apache.tinkerpop.gremlin.process.traversal.PInterface;
 import org.apache.tinkerpop.gremlin.process.traversal.Path;
 import org.apache.tinkerpop.gremlin.process.traversal.Pop;
 import org.apache.tinkerpop.gremlin.process.traversal.Scope;
@@ -1176,9 +1177,9 @@ public class __ {
     }
 
     /**
-     * @see GraphTraversal#hasLabel(P)
+     * @see GraphTraversal#hasLabel(PInterface)
      */
-    public static <A> GraphTraversal<A, A> hasLabel(final P<String> predicate) {
+    public static <A> GraphTraversal<A, A> hasLabel(final PInterface<String> predicate) {
         return __.<A>start().hasLabel(predicate);
     }
 
@@ -1190,9 +1191,9 @@ public class __ {
     }
 
     /**
-     * @see GraphTraversal#hasId(P)
+     * @see GraphTraversal#hasId(PInterface)
      */
-    public static <A> GraphTraversal<A, A> hasId(final P<?> predicate) {
+    public static <A> GraphTraversal<A, A> hasId(final PInterface<?> predicate) {
         return __.<A>start().hasId(predicate);
     }
 
@@ -1204,9 +1205,9 @@ public class __ {
     }
 
     /**
-     * @see GraphTraversal#hasKey(P)
+     * @see GraphTraversal#hasKey(PInterface)
      */
-    public static <A> GraphTraversal<A, A> hasKey(final P<String> predicate) {
+    public static <A> GraphTraversal<A, A> hasKey(final PInterface<String> predicate) {
         return __.<A>start().hasKey(predicate);
     }
 
@@ -1225,16 +1226,16 @@ public class __ {
     }
 
     /**
-     * @see GraphTraversal#where(String, P)
+     * @see GraphTraversal#where(String, PInterface)
      */
-    public static <A> GraphTraversal<A, A> where(final String startKey, final P<String> predicate) {
+    public static <A> GraphTraversal<A, A> where(final String startKey, final PInterface<String> predicate) {
         return __.<A>start().where(startKey, predicate);
     }
 
     /**
-     * @see GraphTraversal#where(P)
+     * @see GraphTraversal#where(PInterface)
      */
-    public static <A> GraphTraversal<A, A> where(final P<String> predicate) {
+    public static <A> GraphTraversal<A, A> where(final PInterface<String> predicate) {
         return __.<A>start().where(predicate);
     }
 
@@ -1442,14 +1443,14 @@ public class __ {
     }
 
     /**
-     * @see GraphTraversal#all(P)
+     * @see GraphTraversal#all(PInterface)
      */
-    public static <A> GraphTraversal<A, A> all(final P<A> predicate) { return __.<A>start().all(predicate); }
+    public static <A> GraphTraversal<A, A> all(final PInterface<A> predicate) { return __.<A>start().all(predicate); }
 
     /**
-     * @see GraphTraversal#any(P)
+     * @see GraphTraversal#any(PInterface)
      */
-    public static <A> GraphTraversal<A, A> any(final P<A> predicate) { return __.<A>start().any(predicate); }
+    public static <A> GraphTraversal<A, A> any(final PInterface<A> predicate) { return __.<A>start().any(predicate); }
 
     ///////////////////// SIDE-EFFECT STEPS /////////////////////
 

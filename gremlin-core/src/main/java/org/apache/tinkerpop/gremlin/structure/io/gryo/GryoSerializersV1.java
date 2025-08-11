@@ -212,15 +212,15 @@ public final class GryoSerializersV1 {
                     return predicate.equals("and") ? new AndP((List<P>) value) : new OrP((List<P>) value);
                 else if (value instanceof Collection) {
                     if (predicate.equals("between"))
-                        return P.between(((List) value).get(0), ((List) value).get(1));
+                        return (P) P.between(((List) value).get(0), ((List) value).get(1));
                     else if (predicate.equals("inside"))
-                        return P.inside(((List) value).get(0), ((List) value).get(1));
+                        return (P) P.inside(((List) value).get(0), ((List) value).get(1));
                     else if (predicate.equals("outside"))
-                        return P.outside(((List) value).get(0), ((List) value).get(1));
+                        return (P) P.outside(((List) value).get(0), ((List) value).get(1));
                     else if (predicate.equals("within"))
-                        return P.within((Collection) value);
+                        return (P) P.within((Collection) value);
                     else if (predicate.equals("without"))
-                        return P.without((Collection) value);
+                        return (P) P.without((Collection) value);
                     else
                         return (P) P.class.getMethod(predicate, Collection.class).invoke(null, (Collection) value);
                 } else

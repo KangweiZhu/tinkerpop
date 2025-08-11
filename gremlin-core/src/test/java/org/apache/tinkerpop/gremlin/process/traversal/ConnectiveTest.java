@@ -38,9 +38,9 @@ import static org.junit.Assert.assertEquals;
 public class ConnectiveTest {
 
     private static final Object VAL = 1;
-    private static final P TRUE = P.eq(1);
-    private static final P FALSE = P.gt(1);
-    private static final P ERROR = P.lt(Double.NaN);
+    private static final PInterface TRUE = P.eq(1);
+    private static final PInterface FALSE = P.gt(1);
+    private static final PInterface ERROR = P.lt(Double.NaN);
 
     @RunWith(Parameterized.class)
     public static class OrTest {

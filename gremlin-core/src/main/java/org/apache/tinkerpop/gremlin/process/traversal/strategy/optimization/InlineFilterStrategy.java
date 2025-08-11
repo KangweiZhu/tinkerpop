@@ -23,6 +23,7 @@ import org.apache.tinkerpop.gremlin.process.computer.traversal.strategy.optimiza
 import org.apache.tinkerpop.gremlin.process.traversal.Compare;
 import org.apache.tinkerpop.gremlin.process.traversal.Contains;
 import org.apache.tinkerpop.gremlin.process.traversal.P;
+import org.apache.tinkerpop.gremlin.process.traversal.PInterface;
 import org.apache.tinkerpop.gremlin.process.traversal.Step;
 import org.apache.tinkerpop.gremlin.process.traversal.Traversal;
 import org.apache.tinkerpop.gremlin.process.traversal.TraversalStrategy;
@@ -212,14 +213,14 @@ public final class InlineFilterStrategy extends AbstractTraversalStrategy<Traver
     private static boolean processOrStep(final OrStep<?> step, final Traversal.Admin<?, ?> traversal) {
         boolean process = true;
         String key = null;
-        P predicate = null;
+        PInterface predicate = null;
         final List<String> labels = new ArrayList<>();
         final List<Step> stepsToRemoveFromManager = new ArrayList<>();
         for (final Traversal.Admin<?, ?> childTraversal : step.getLocalChildren()) {
             InlineFilterStrategy.instance().apply(childTraversal);
             for (final Step<?, ?> childStep : childTraversal.getSteps()) {
                 if (childStep instanceof HasStep) {
-                    P p = null;
+                    PInterface p = null;
                     for (final HasContainer hasContainer : ((HasStep<?>) childStep).getHasContainers()) {
                         if (null == key)
                             key = hasContainer.getKey();

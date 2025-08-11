@@ -19,6 +19,7 @@
 package org.apache.tinkerpop.gremlin.process.traversal.step.util;
 
 import org.apache.tinkerpop.gremlin.process.traversal.P;
+import org.apache.tinkerpop.gremlin.process.traversal.PInterface;
 import org.apache.tinkerpop.gremlin.structure.Element;
 import org.apache.tinkerpop.gremlin.structure.Property;
 import org.apache.tinkerpop.gremlin.structure.T;
@@ -38,11 +39,11 @@ import java.util.function.Predicate;
 public class HasContainer implements Serializable, Cloneable, Predicate<Element> {
 
     private String key;
-    private P predicate;
+    private PInterface predicate;
 
     private final boolean testingIdString;
 
-    public HasContainer(final String key, final P<?> predicate) {
+    public HasContainer(final String key, final PInterface<?> predicate) {
         this.key = key;
         this.predicate = predicate;
         this.testingIdString = isStringTestable();
@@ -130,7 +131,7 @@ public class HasContainer implements Serializable, Cloneable, Predicate<Element>
         this.key = key;
     }
 
-    public final P<?> getPredicate() {
+    public final PInterface<?> getPredicate() {
         return this.predicate;
     }
 
@@ -184,5 +185,9 @@ public class HasContainer implements Serializable, Cloneable, Predicate<Element>
             }
         }
         return true;
+    }
+
+    public void reduceGValue() {
+        predicate = predicate.reduceGValue();
     }
 }

@@ -16,25 +16,17 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.tinkerpop.gremlin.process.traversal.step.stepContract;
+package org.apache.tinkerpop.gremlin.process.traversal;
 
-import org.apache.tinkerpop.gremlin.process.traversal.PInterface;
-import org.apache.tinkerpop.gremlin.process.traversal.Step;
-import org.apache.tinkerpop.gremlin.process.traversal.traverser.TraverserRequirement;
+import org.apache.tinkerpop.gremlin.process.traversal.step.GValue;
 
-import java.util.Set;
+public class GValueTextP extends GValueP<String> {
+    public GValueTextP(PBiPredicate<String, String> biPredicate, GValue<String> value) {
+        super(biPredicate, value);
+    }
 
-/**
- * Defines the contract for steps containing a single {@link PInterface}.
- */
-public interface IsStepInterface<S> extends Step<S, S> {
-
-    /**
-     * Retrieves the step's predicate.
-     *
-     * @return the predicate associated with the step
-     */
-    public PInterface<?> getPredicate();
-
-    public Set<TraverserRequirement> getRequirements();
+    @Override
+    public P<String> reduceGValue() {
+        return new TextP(biPredicate, getValue());
+    }
 }

@@ -21,6 +21,7 @@ package org.apache.tinkerpop.gremlin.process.traversal.strategy.optimization;
 import org.apache.tinkerpop.gremlin.process.traversal.Compare;
 import org.apache.tinkerpop.gremlin.process.traversal.Contains;
 import org.apache.tinkerpop.gremlin.process.traversal.P;
+import org.apache.tinkerpop.gremlin.process.traversal.PInterface;
 import org.apache.tinkerpop.gremlin.process.traversal.Step;
 import org.apache.tinkerpop.gremlin.process.traversal.Traversal;
 import org.apache.tinkerpop.gremlin.process.traversal.TraversalStrategy;
@@ -93,10 +94,10 @@ public final class CountStrategy extends AbstractTraversalStrategy<TraversalStra
             final Step curr = traversal.getSteps().get(i);
             if (i < size - 1 && doStrategy(curr)) {
                 final IsStepInterface isStep = (IsStepInterface) traversal.getSteps().get(i + 1);
-                final P isStepPredicate = isStep.getPredicate();
+                final PInterface isStepPredicate = isStep.getPredicate();
                 Long highRange = null;
                 boolean useNotStep = false, dismissCountIs = false, hasGtOrLtNegative = false;
-                for (P p : isStepPredicate instanceof ConnectiveP ? ((ConnectiveP<?>) isStepPredicate).getPredicates() : Collections.singletonList(isStepPredicate)) {
+                for (PInterface p : isStepPredicate instanceof ConnectiveP ? ((ConnectiveP<?>) isStepPredicate).getPredicates() : Collections.singletonList(isStepPredicate)) {
                     final Object value = p.getValue();
                     final BiPredicate predicate = p.getBiPredicate();
                     if (value instanceof Number) {

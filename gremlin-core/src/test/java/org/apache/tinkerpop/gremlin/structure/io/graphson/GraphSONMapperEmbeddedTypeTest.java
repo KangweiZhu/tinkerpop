@@ -25,6 +25,7 @@ import org.apache.tinkerpop.gremlin.process.traversal.Bytecode;
 import org.apache.tinkerpop.gremlin.process.traversal.Compare;
 import org.apache.tinkerpop.gremlin.process.traversal.P;
 import org.apache.tinkerpop.gremlin.process.traversal.PBiPredicate;
+import org.apache.tinkerpop.gremlin.process.traversal.PInterface;
 import org.apache.tinkerpop.gremlin.process.traversal.Traversal;
 import org.apache.tinkerpop.gremlin.process.traversal.TraversalStrategy;
 import org.apache.tinkerpop.gremlin.process.traversal.Traverser;
@@ -386,7 +387,7 @@ public class GraphSONMapperEmbeddedTypeTest extends AbstractGraphSONTest {
     public void shouldHandlePMultiValue() throws Exception  {
         assumeThat(version, either(startsWith("v2")).or(startsWith("v3")));
 
-        final P o = P.within(1,2,3,null);
+        final PInterface o = P.within(1,2,3,null);
         assertEquals(o, serializeDeserialize(mapper, o, P.class));
     }
 
@@ -394,7 +395,7 @@ public class GraphSONMapperEmbeddedTypeTest extends AbstractGraphSONTest {
     public void shouldHandlePSingleValue() throws Exception  {
         assumeThat(version, either(startsWith("v2")).or(startsWith("v3")));
 
-        final P o = P.within(1);
+        final PInterface o = P.within(1);
         assertEquals(o, serializeDeserialize(mapper, o, P.class));
     }
 
@@ -402,7 +403,7 @@ public class GraphSONMapperEmbeddedTypeTest extends AbstractGraphSONTest {
     public void shouldHandlePMultiValueAsList() throws Exception  {
         assumeThat(version, either(startsWith("v2")).or(startsWith("v3")));
 
-        final P o = P.within(Arrays.asList(1,2,3,null));
+        final PInterface o = P.within(Arrays.asList(1,2,3,null));
         assertEquals(o, serializeDeserialize(mapper, o, P.class));
     }
 
@@ -410,7 +411,7 @@ public class GraphSONMapperEmbeddedTypeTest extends AbstractGraphSONTest {
     public void shouldHandlePMultiValueAsSet() throws Exception  {
         assumeThat(version, startsWith("v3"));
 
-        final P o = P.within(new HashSet<>(Arrays.asList(1,2,3)));
+        final PInterface o = P.within(new HashSet<>(Arrays.asList(1,2,3)));
         assertEquals(o, serializeDeserialize(mapper, o, P.class));
     }
 
@@ -418,7 +419,7 @@ public class GraphSONMapperEmbeddedTypeTest extends AbstractGraphSONTest {
     public void shouldHandlePBetween() throws Exception  {
         assumeThat(version, either(startsWith("v2")).or(startsWith("v3")));
 
-        final P o = P.between(1, 100);
+        final PInterface o = P.between(1, 100);
         assertEquals(o, serializeDeserialize(mapper, o, P.class));
     }
 
@@ -428,7 +429,7 @@ public class GraphSONMapperEmbeddedTypeTest extends AbstractGraphSONTest {
         // but should be a g:List (i think)
         assumeThat(version, either(startsWith("v2")).or(startsWith("v3")));
 
-        final P o = P.within(Arrays.asList(1,2,3));
+        final PInterface o = P.within(Arrays.asList(1,2,3));
         assertEquals(o, mapper.readValue("{\"@type\": \"g:P\", \"@value\": {\"predicate\": \"within\", \"value\": [{\"@type\": \"g:Int32\", \"@value\": 1},{\"@type\": \"g:Int32\", \"@value\": 2},{\"@type\": \"g:Int32\", \"@value\": 3}]}}", Object.class));
     }
 
@@ -436,7 +437,7 @@ public class GraphSONMapperEmbeddedTypeTest extends AbstractGraphSONTest {
     public void shouldReadPWithGraphSONList() throws Exception {
         assumeThat(version, startsWith("v3"));
 
-        final P o = P.within(Arrays.asList(1,2,3));
+        final PInterface o = P.within(Arrays.asList(1,2,3));
         assertEquals(o, mapper.readValue("{\"@type\": \"g:P\", \"@value\": {\"predicate\": \"within\", \"value\": {\"@type\": \"g:List\", \"@value\": [{\"@type\": \"g:Int32\", \"@value\": 1},{\"@type\": \"g:Int32\", \"@value\": 2},{\"@type\": \"g:Int32\", \"@value\": 3}]}}}", Object.class));
     }
 

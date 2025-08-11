@@ -30,6 +30,7 @@ import org.apache.tinkerpop.gremlin.process.traversal.Failure;
 import org.apache.tinkerpop.gremlin.process.traversal.Merge;
 import org.apache.tinkerpop.gremlin.process.traversal.Order;
 import org.apache.tinkerpop.gremlin.process.traversal.P;
+import org.apache.tinkerpop.gremlin.process.traversal.PInterface;
 import org.apache.tinkerpop.gremlin.process.traversal.Path;
 import org.apache.tinkerpop.gremlin.process.traversal.Pick;
 import org.apache.tinkerpop.gremlin.process.traversal.Pop;
@@ -2600,7 +2601,7 @@ public interface GraphTraversal<S, E> extends Traversal<S, E> {
      * @see <a href="http://tinkerpop.apache.org/docs/${project.version}/reference/#using-where-with-select" target="_blank">Reference Documentation - Where with Select</a>
      * @since 3.0.0-incubating
      */
-    public default GraphTraversal<S, E> where(final String startKey, final P<String> predicate) {
+    public default GraphTraversal<S, E> where(final String startKey, final PInterface<String> predicate) {
         if (predicate != null && predicate.isParameterized()) {
             throw new IllegalArgumentException("Parameterized predicates are not supported by where()");
         }
@@ -2618,7 +2619,7 @@ public interface GraphTraversal<S, E> extends Traversal<S, E> {
      * @see <a href="http://tinkerpop.apache.org/docs/${project.version}/reference/#using-where-with-select" target="_blank">Reference Documentation - Where with Select</a>
      * @since 3.0.0-incubating
      */
-    public default GraphTraversal<S, E> where(final P<String> predicate) {
+    public default GraphTraversal<S, E> where(final PInterface<String> predicate) {
         if (predicate != null && predicate.isParameterized()) {
             throw new IllegalArgumentException("Parameterized predicates are not supported by where()");
         }
@@ -2902,7 +2903,7 @@ public interface GraphTraversal<S, E> extends Traversal<S, E> {
      * @see <a href="http://tinkerpop.apache.org/docs/${project.version}/reference/#has-step" target="_blank">Reference Documentation - Has Step</a>
      * @since 3.2.4
      */
-    public default GraphTraversal<S, E> hasLabel(final P<String> predicate) {
+    public default GraphTraversal<S, E> hasLabel(final PInterface<String> predicate) {
         // if calling hasLabel(null), the likely use the caller is going for is not a "no predicate" but a eq(null)
         if (null == predicate) {
             return hasLabel((String) null);
@@ -2985,7 +2986,7 @@ public interface GraphTraversal<S, E> extends Traversal<S, E> {
      * @see <a href="http://tinkerpop.apache.org/docs/${project.version}/reference/#has-step" target="_blank">Reference Documentation - Has Step</a>
      * @since 3.2.4
      */
-    public default GraphTraversal<S, E> hasId(final P<?> predicate) {
+    public default GraphTraversal<S, E> hasId(final PInterface<?> predicate) {
         if (null == predicate)
             return hasId((Object) null);
 
@@ -3026,7 +3027,7 @@ public interface GraphTraversal<S, E> extends Traversal<S, E> {
      * @see <a href="http://tinkerpop.apache.org/docs/${project.version}/reference/#has-step" target="_blank">Reference Documentation - Has Step</a>
      * @since 3.2.4
      */
-    public default GraphTraversal<S, E> hasKey(final P<String> predicate) {
+    public default GraphTraversal<S, E> hasKey(final PInterface<String> predicate) {
         // if calling hasKey(null), the likely use the caller is going for is not a "no predicate" but a eq(null)
         if (null == predicate) {
             return hasKey((String) null);
@@ -3116,8 +3117,8 @@ public interface GraphTraversal<S, E> extends Traversal<S, E> {
      */
     public default GraphTraversal<S, E> is(final Object value) {
         this.asAdmin().getBytecode().addStep(Symbols.is, value);
-        P<E> predicate = value instanceof P ? (P<E>) value : P.eq((E) value);
-        return this.asAdmin().addStep(predicate.isParameterized() ? new IsStepPlaceholder<>(this.asAdmin(), predicate) : new IsStep<>(this.asAdmin(), predicate));
+        PInterface<E> predicate = value instanceof PInterface ? (PInterface<E>) value : P.eq((E) value);
+        return this.asAdmin().addStep(predicate.isParameterized() ? new IsStepPlaceholder<>(this.asAdmin(), predicate) : new IsStep<>(this.asAdmin(), predicate.reduceGValue()));
     }
 
     /**
@@ -3516,7 +3517,7 @@ public interface GraphTraversal<S, E> extends Traversal<S, E> {
      * @see <a href="http://tinkerpop.apache.org/docs/${project.version}/reference/#all-step" target="_blank">Reference Documentation - All Step</a>
      * @since 3.7.1
      */
-    public default <S2> GraphTraversal<S, E> all(final P<S2> predicate) {
+    public default <S2> GraphTraversal<S, E> all(final PInterface<S2> predicate) {
         if (predicate != null && predicate.isParameterized()) {
             throw new IllegalArgumentException("Parameterized predicates are not supported by all()");
         }
@@ -3532,7 +3533,7 @@ public interface GraphTraversal<S, E> extends Traversal<S, E> {
      * @see <a href="http://tinkerpop.apache.org/docs/${project.version}/reference/#any-step" target="_blank">Reference Documentation - Any Step</a>
      * @since 3.7.1
      */
-    public default <S2> GraphTraversal<S, E> any(final P<S2> predicate) {
+    public default <S2> GraphTraversal<S, E> any(final PInterface<S2> predicate) {
         if (predicate != null && predicate.isParameterized()) {
             throw new IllegalArgumentException("Parameterized predicates are not supported by any()");
         }

@@ -21,20 +21,22 @@ package org.apache.tinkerpop.gremlin.process.traversal.util;
 import org.apache.tinkerpop.gremlin.process.traversal.GremlinTypeErrorException;
 import org.apache.tinkerpop.gremlin.process.traversal.P;
 import org.apache.tinkerpop.gremlin.process.traversal.PBiPredicate;
+import org.apache.tinkerpop.gremlin.process.traversal.PInterface;
 import org.apache.tinkerpop.gremlin.structure.util.StringFactory;
 
 import java.io.Serializable;
 import java.util.List;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 /**
  * @author Marko A. Rodriguez (http://markorodriguez.com)
  */
 public final class AndP<V> extends ConnectiveP<V> {
 
-    public AndP(final List<P<V>> predicates) {
+    public AndP(final List<PInterface<V>> predicates) {
         super(predicates);
-        for (final P<V> p : predicates) {
+        for (final PInterface<V> p : predicates) {
             this.and(p);
         }
         this.biPredicate = new AndBiPredicate(this);
@@ -42,13 +44,18 @@ public final class AndP<V> extends ConnectiveP<V> {
 
     @Override
     public P<V> and(final Predicate<? super V> predicate) {
-        if (!(predicate instanceof P))
-            throw new IllegalArgumentException("Only P predicates can be and'd together");
+        if (!(predicate instanceof PInterface))
+            throw new IllegalArgumentException("Only PInterface predicates can be and'd together");
         else if (predicate instanceof AndP)
             this.predicates.addAll(((AndP) predicate).getPredicates());
         else
-            this.predicates.add((P<V>) predicate);
+            this.predicates.add((PInterface<V>) predicate);
         return this;
+    }
+
+    @Override
+    public P<V> reduceGValue() {
+        return new AndP<>(predicates.stream().map(p -> p == null ? null : p.reduceGValue()).collect(Collectors.toList()));
     }
 
     @Override
@@ -80,7 +87,7 @@ public final class AndP<V> extends ConnectiveP<V> {
         @Override
         public boolean test(final V valueA, final V valueB) {
             GremlinTypeErrorException typeError = null;
-            for (final P<V> predicate : this.andP.predicates) {
+            for (final PInterface<V> predicate : this.andP.predicates) {
                 try {
                     if (!predicate.test(valueA))
                         return false;

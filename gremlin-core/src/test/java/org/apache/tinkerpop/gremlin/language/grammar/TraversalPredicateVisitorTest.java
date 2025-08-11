@@ -21,6 +21,7 @@ package org.apache.tinkerpop.gremlin.language.grammar;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.apache.tinkerpop.gremlin.process.traversal.P;
+import org.apache.tinkerpop.gremlin.process.traversal.PInterface;
 import org.apache.tinkerpop.gremlin.process.traversal.TextP;
 import org.junit.Assert;
 import org.junit.Test;
@@ -103,7 +104,7 @@ public class TraversalPredicateVisitorTest {
         final GremlinLexer lexer = new GremlinLexer(CharStreams.fromString(script));
         final GremlinParser parser = new GremlinParser(new CommonTokenStream(lexer));
         final GremlinParser.TraversalPredicateContext ctx = parser.traversalPredicate();
-        final P predicate = new TraversalPredicateVisitor(new GremlinAntlrToJava()).visitTraversalPredicate(ctx);
+        final PInterface predicate = new TraversalPredicateVisitor(new GremlinAntlrToJava()).visitTraversalPredicate(ctx);
 
         Assert.assertEquals(expected, predicate);
     }

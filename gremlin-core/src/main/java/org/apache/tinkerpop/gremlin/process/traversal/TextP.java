@@ -31,10 +31,6 @@ public class TextP extends P<String> {
         super(biPredicate, value);
     }
 
-    public TextP(final PBiPredicate<String, String> biPredicate, final GValue<String> value) {
-        super(biPredicate, value);
-    }
-
     @Override
     public boolean equals(final Object other) {
         return other instanceof TextP && super.equals(other);
@@ -70,8 +66,8 @@ public class TextP extends P<String> {
      *
      * @since 3.8.0
      */
-    public static TextP startingWith(final GValue<String> value) {
-        return new TextP(Text.startingWith, value);
+    public static PInterface<String> startingWith(final GValue<String> value) {
+        return new GValueTextP(Text.startingWith, value);
     }
 
     /**
@@ -88,8 +84,8 @@ public class TextP extends P<String> {
      *
      * @since 3.8.0
      */
-    public static TextP notStartingWith(final GValue<String> value) {
-        return new TextP(Text.notStartingWith, value);
+    public static PInterface<String> notStartingWith(final GValue<String> value) {
+        return new GValueTextP(Text.notStartingWith, value);
     }
 
     /**
@@ -106,8 +102,8 @@ public class TextP extends P<String> {
      *
      * @since 3.8.0
      */
-    public static TextP endingWith(final GValue<String> value) {
-        return new TextP(Text.endingWith, value);
+    public static PInterface<String> endingWith(final GValue<String> value) {
+        return new GValueTextP(Text.endingWith, value);
     }
 
     /**
@@ -124,8 +120,8 @@ public class TextP extends P<String> {
      *
      * @since 3.8.0
      */
-    public static TextP notEndingWith(final GValue<String> value) {
-        return new TextP(Text.notEndingWith, value);
+    public static PInterface<String> notEndingWith(final GValue<String> value) {
+        return new GValueTextP(Text.notEndingWith, value);
     }
 
     /**
@@ -142,8 +138,8 @@ public class TextP extends P<String> {
      *
      * @since 3.8.0
      */
-    public static TextP containing(final GValue<String> value) {
-        return new TextP(Text.containing, value);
+    public static PInterface<String> containing(final GValue<String> value) {
+        return new GValueTextP(Text.containing, value);
     }
 
     /**
@@ -160,8 +156,8 @@ public class TextP extends P<String> {
      *
      * @since 3.8.0
      */
-    public static TextP notContaining(final GValue<String> value) {
-        return new TextP(Text.notContaining, value);
+    public static PInterface<String> notContaining(final GValue<String> value) {
+        return new GValueTextP(Text.notContaining, value);
     }
     
     /**           
@@ -184,8 +180,8 @@ public class TextP extends P<String> {
      *
      * @since 3.8.0
      */
-    public static TextP regex(final GValue<String> value) {
-        return new TextP(new Text.RegexPredicate(value.get(), false), value);
+    public static PInterface<String> regex(final GValue<String> value) {
+        return new GValueTextP(new Text.RegexPredicate(value.get(), false), value);
     }
 
     /**           
@@ -204,7 +200,7 @@ public class TextP extends P<String> {
      *
      * @since 3.8.0
      */
-    public static TextP notRegex(final GValue<String> value) {
-        return new TextP(new Text.RegexPredicate(value.get(), true), value);
+    public static PInterface<String> notRegex(final GValue<String> value) {
+        return new GValueTextP(new Text.RegexPredicate(value.get(), true), value);
     }
 }

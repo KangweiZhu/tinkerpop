@@ -20,6 +20,7 @@ package org.apache.tinkerpop.gremlin.process.traversal.step.filter;
 
 import org.apache.tinkerpop.gremlin.process.traversal.GremlinTypeErrorException;
 import org.apache.tinkerpop.gremlin.process.traversal.P;
+import org.apache.tinkerpop.gremlin.process.traversal.PInterface;
 import org.apache.tinkerpop.gremlin.process.traversal.Traversal;
 import org.apache.tinkerpop.gremlin.process.traversal.Traverser;
 import org.apache.tinkerpop.gremlin.process.traversal.traverser.TraverserRequirement;
@@ -32,9 +33,9 @@ import java.util.Set;
 
 public final class AnyStep<S, S2> extends FilterStep<S> {
 
-    private P<S2> predicate;
+    private PInterface<S2> predicate;
 
-    public AnyStep(final Traversal.Admin traversal, final P<S2> predicate) {
+    public AnyStep(final Traversal.Admin traversal, final PInterface<S2> predicate) {
         super(traversal);
 
         if (null == predicate) {

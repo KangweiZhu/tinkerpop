@@ -19,6 +19,7 @@
 package org.apache.tinkerpop.gremlin.process.traversal.step.filter;
 
 import org.apache.tinkerpop.gremlin.process.traversal.P;
+import org.apache.tinkerpop.gremlin.process.traversal.PInterface;
 import org.apache.tinkerpop.gremlin.process.traversal.Step;
 import org.apache.tinkerpop.gremlin.process.traversal.Traversal;
 import org.apache.tinkerpop.gremlin.process.traversal.Traverser;
@@ -40,9 +41,9 @@ import java.util.Set;
  */
 public final class IsStepPlaceholder<S> extends AbstractStep<S,S> implements GValueHolder<S, S>, IsStepInterface<S> {
 
-    private P<S> predicate;
+    private PInterface<S> predicate;
 
-    public IsStepPlaceholder(final Traversal.Admin traversal, final P<S> predicate) {
+    public IsStepPlaceholder(final Traversal.Admin traversal, final PInterface<S> predicate) {
         super(traversal);
         this.predicate = predicate;
         traversal.getGValueManager().register(predicate.getGValues());
@@ -54,14 +55,14 @@ public final class IsStepPlaceholder<S> extends AbstractStep<S,S> implements GVa
     }
 
     @Override
-    public P<S> getPredicate() {
+    public PInterface<S> getPredicate() {
         if (predicate.isParameterized()) {
             traversal.getGValueManager().pinGValues(predicate.getGValues());
         }
         return this.predicate;
     }
 
-    public P<S> getPredicateGValueSafe() {
+    public PInterface<S> getPredicateGValueSafe() {
         return this.predicate;
     }
 
@@ -84,8 +85,7 @@ public final class IsStepPlaceholder<S> extends AbstractStep<S,S> implements GVa
 
     @Override
     public Step<S, S> asConcreteStep() {
-        //TODO:: does the predicate need any altering?
-        IsStep<S> step = new IsStep<>(traversal, predicate);
+        IsStep<S> step = new IsStep<>(traversal, predicate.reduceGValue());
         TraversalHelper.copyLabels(this, step, false);
         return step;
     }

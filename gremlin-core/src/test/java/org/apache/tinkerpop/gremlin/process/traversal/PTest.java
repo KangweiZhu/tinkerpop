@@ -290,7 +290,7 @@ public class PTest {
         }
 
         @Parameterized.Parameter(value = 0)
-        public P predicate;
+        public PInterface predicate;
 
         @Parameterized.Parameter(value = 1)
         public Object value;
@@ -303,6 +303,9 @@ public class PTest {
             if (expected instanceof Class)
                 exceptionRule.expect((Class) expected);
 
+            if(predicate.isParameterized()) {
+                predicate = predicate.reduceGValue();
+            }
             assertEquals(expected, predicate.test(value));
             assertNotEquals(expected, predicate.clone().negate().test(value));
             assertNotEquals(expected, P.not(predicate.clone()).test(value));
@@ -316,12 +319,20 @@ public class PTest {
         @Before
         public void init() {
             final Object pv = predicate.getValue();
+            Object gValue = null;
+            if (predicate instanceof GValueP) {
+                gValue = ((GValueP<?>) predicate).getGValue();
+            }
             final Random r = new Random();
             assertNotNull(predicate.getBiPredicate());
             predicate.setValue(r.nextDouble());
             assertNotNull(predicate.getValue());
             predicate.setValue(pv);
             assertEquals(pv, predicate.getValue());
+            if (gValue != null) {
+                predicate.setValue(gValue);
+                assertEquals(pv, predicate.getValue());
+            }
             assertNotNull(predicate.hashCode());
             assertEquals(predicate, predicate.clone());
             assertNotEquals(__.identity(), predicate);
@@ -331,7 +342,7 @@ public class PTest {
                 predicate.and(new CustomPredicate());
                 thrown = false;
             } catch (IllegalArgumentException ex) {
-                assertEquals("Only P predicates can be and'd together", ex.getMessage());
+                assertEquals("Only PInterface predicates can be and'd together", ex.getMessage());
             } finally {
                 assertTrue(thrown);
             }
@@ -341,7 +352,7 @@ public class PTest {
                 predicate.or(new CustomPredicate());
                 thrown = false;
             } catch (IllegalArgumentException ex) {
-                assertEquals("Only P predicates can be or'd together", ex.getMessage());
+                assertEquals("Only PInterface predicates can be or'd together", ex.getMessage());
             } finally {
                 assertTrue(thrown);
             }

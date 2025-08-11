@@ -19,6 +19,7 @@
 package org.apache.tinkerpop.gremlin.process.traversal.step.filter;
 
 import org.apache.tinkerpop.gremlin.process.traversal.P;
+import org.apache.tinkerpop.gremlin.process.traversal.PInterface;
 import org.apache.tinkerpop.gremlin.process.traversal.Pop;
 import org.apache.tinkerpop.gremlin.process.traversal.Traversal;
 import org.apache.tinkerpop.gremlin.process.traversal.Traverser;
@@ -49,25 +50,28 @@ public final class WherePredicateStep<S> extends FilterStep<S> implements Scopin
 
     protected String startKey;
     protected List<String> selectKeys;
-    protected P<Object> predicate;
+    protected PInterface<Object> predicate;
     protected final Set<String> scopeKeys = new HashSet<>();
     protected Set<String> keepLabels;
 
     protected TraversalRing<S, ?> traversalRing = new TraversalRing<>();
 
-    public WherePredicateStep(final Traversal.Admin traversal, final Optional<String> startKey, final P<String> predicate) {
+    public WherePredicateStep(final Traversal.Admin traversal, final Optional<String> startKey, final PInterface<String> predicate) {
         super(traversal);
         this.startKey = startKey.orElse(null);
         if (null != this.startKey)
             this.scopeKeys.add(this.startKey);
-        this.predicate = (P) predicate;
+        this.predicate = (PInterface) predicate;
         this.selectKeys = new ArrayList<>();
         this.configurePredicates(this.predicate);
     }
 
-    private void configurePredicates(final P<Object> predicate) {
+    private void configurePredicates(final PInterface<Object> predicate) {
+        if (predicate.isParameterized()) {
+            throw new IllegalArgumentException("WherePredicateStep does not support parameterized predicates");
+        }
         if (predicate instanceof ConnectiveP)
-            ((ConnectiveP<Object>) predicate).getPredicates().forEach(this::configurePredicates);
+            ((ConnectiveP<Object>) predicate).getPredicates().stream().filter(p -> p instanceof P).forEach(p -> configurePredicates((P<Object>) p));
         else {
             final String selectKey = getSelectKey(predicate);
             this.selectKeys.add(selectKey);
@@ -75,9 +79,9 @@ public final class WherePredicateStep<S> extends FilterStep<S> implements Scopin
         }
     }
 
-    private boolean setPredicateValues(final P<Object> predicate, final Traverser.Admin<S> traverser, final Iterator<String> selectKeysIterator) {
+    private boolean setPredicateValues(final PInterface<Object> predicate, final Traverser.Admin<S> traverser, final Iterator<String> selectKeysIterator) {
         if (predicate instanceof ConnectiveP) {
-            for (P<Object> p : ((ConnectiveP<Object>) predicate).getPredicates()) {
+            for (PInterface<Object> p : ((ConnectiveP<Object>) predicate).getPredicates()) {
                 if (!this.setPredicateValues(p, traverser, selectKeysIterator))
                     return false;
             }
@@ -92,7 +96,7 @@ public final class WherePredicateStep<S> extends FilterStep<S> implements Scopin
         }
     }
 
-    public Optional<P<?>> getPredicate() {
+    public Optional<PInterface<?>> getPredicate() {
         return Optional.ofNullable(this.predicate);
     }
 
@@ -100,7 +104,7 @@ public final class WherePredicateStep<S> extends FilterStep<S> implements Scopin
         return Optional.ofNullable(this.startKey);
     }
 
-    public String getSelectKey(final P<Object> predicate) {
+    public String getSelectKey(final PInterface<Object> predicate) {
         return (String) (predicate.getValue() instanceof Collection ? ((Collection) predicate.getValue()).iterator().next()
                 : predicate.getValue()); // hack for within("x"))
     }

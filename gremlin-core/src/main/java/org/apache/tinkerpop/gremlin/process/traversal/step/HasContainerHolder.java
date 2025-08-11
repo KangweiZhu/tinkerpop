@@ -18,7 +18,7 @@
  */
 package org.apache.tinkerpop.gremlin.process.traversal.step;
 
-import org.apache.tinkerpop.gremlin.process.traversal.P;
+import org.apache.tinkerpop.gremlin.process.traversal.PInterface;
 import org.apache.tinkerpop.gremlin.process.traversal.Step;
 import org.apache.tinkerpop.gremlin.process.traversal.step.util.HasContainer;
 
@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 /**
  * @author Marko A. Rodriguez (http://markorodriguez.com)
  */
-public interface HasContainerHolder<S, E> extends GValueHolder<S, E> { //TODO raw type
+public interface HasContainerHolder<S, E> extends GValueHolder<S, E> {
 
     public List<HasContainer> getHasContainers();
 
@@ -41,27 +41,36 @@ public interface HasContainerHolder<S, E> extends GValueHolder<S, E> { //TODO ra
         throw new UnsupportedOperationException("The holder does not support container removal: " + this.getClass().getCanonicalName());
     }
 
-    public default Collection<P<?>> getPredicates() {
+    public default Collection<PInterface<?>> getPredicates() {
         return getHasContainers().stream().map(p -> p.getPredicate()).collect(Collectors.toList());
     }
 
+    @Override
+    public default void reduce() {
+        getHasContainers().forEach(hc -> hc.reduceGValue());
+    }
+
+    @Override
     public default Step<S, E> asConcreteStep() {
-        return this; // TODO do we need to alter the predicates at all?
+        return this;
     }
 
+    @Override
     public default boolean isParameterized() {
-        return getPredicates().stream().anyMatch(P::isParameterized);
+        return getPredicates().stream().anyMatch(PInterface::isParameterized);
     }
 
+    @Override
     public default void updateVariable(final String name, final Object value) {
         getPredicates().forEach((p) -> {
             p.updateVariable(name, value);
         });
     }
 
+    @Override
     public default Collection<GValue<?>> getGValues() {
         Set<GValue<?>> allGValues = new HashSet<>();
-        for (final P<?> p : getPredicates()) {
+        for (final PInterface<?> p : getPredicates()) {
             allGValues.addAll(p.getGValues());
         }
         return allGValues;

@@ -24,6 +24,7 @@ import org.apache.commons.configuration2.ConfigurationConverter;
 import org.apache.tinkerpop.gremlin.process.remote.traversal.DefaultRemoteTraverser;
 import org.apache.tinkerpop.gremlin.process.traversal.Bytecode;
 import org.apache.tinkerpop.gremlin.process.traversal.P;
+import org.apache.tinkerpop.gremlin.process.traversal.PInterface;
 import org.apache.tinkerpop.gremlin.process.traversal.TextP;
 import org.apache.tinkerpop.gremlin.process.traversal.Traversal;
 import org.apache.tinkerpop.gremlin.process.traversal.TraversalStrategy;
@@ -156,7 +157,7 @@ final class TraversalSerializersV3 {
             jsonGenerator.writeStringField(GraphSONTokens.PREDICATE, p.getPredicateName());
             if (p instanceof ConnectiveP) {
                 jsonGenerator.writeArrayFieldStart(GraphSONTokens.VALUE);
-                for (final P<?> predicate : ((ConnectiveP<?>) p).getPredicates()) {
+                for (final PInterface<?> predicate : ((ConnectiveP<?>) p).getPredicates()) {
                     jsonGenerator.writeObject(predicate);
                 }
                 jsonGenerator.writeEndArray();
@@ -360,20 +361,20 @@ final class TraversalSerializersV3 {
             if (predicate.equals(GraphSONTokens.AND) || predicate.equals(GraphSONTokens.OR)) {
                 return predicate.equals(GraphSONTokens.AND) ? new AndP((List<P>) value) : new OrP((List<P>) value);
             } else if (predicate.equals(GraphSONTokens.NOT) && value instanceof P) {
-                return P.not((P<?>) value);
+                return (P) P.not((P<?>) value);
             } else {
                 try {
                     if (value instanceof Collection) {
                         if (predicate.equals("between"))
-                            return P.between(((List) value).get(0), ((List) value).get(1));
+                            return (P) P.between(((List) value).get(0), ((List) value).get(1));
                         else if (predicate.equals("inside"))
-                            return P.between(((List) value).get(0), ((List) value).get(1));
+                            return (P) P.between(((List) value).get(0), ((List) value).get(1));
                         else if (predicate.equals("outside"))
-                            return P.outside(((List) value).get(0), ((List) value).get(1));
+                            return (P) P.outside(((List) value).get(0), ((List) value).get(1));
                         else if (predicate.equals("within"))
-                            return P.within((Collection) value);
+                            return (P) P.within((Collection) value);
                         else if (predicate.equals("without"))
-                            return P.without((Collection) value);
+                            return (P) P.without((Collection) value);
                         else
                             return (P) tryFindMethod(P.class, predicate, Collection.class).invoke(null, (Collection) value);
                     } else {

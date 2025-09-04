@@ -104,8 +104,17 @@ public class PathRetractionStrategyTest {
         for (Step step : traversal.getSteps()) {
             if (step instanceof PathProcessor) {
                 final Set<String> keepers = ((PathProcessor) step).getKeepLabels();
-                if (keepers != null)
-                    keepLabels.add(keepers);
+                if (keepers != null) {
+                    final List<String> orderedKeepers = new ArrayList<>(keepers);
+                    Collections.sort(orderedKeepers, (s1, s2) -> {
+                        if (s1 == null && s2 == null) return 0;
+                        if (s1 == null) return -1;
+                        if (s2 == null) return 1;
+                        int lenCmp = Integer.compare(s1.length(), s2.length());
+                        return lenCmp != 0 ? lenCmp : s1.compareTo(s2);
+                    });
+                    keepLabels.add(orderedKeepers);
+                }
             }
             if (step instanceof TraversalParent) {
                 final TraversalParent parent = (TraversalParent) step;

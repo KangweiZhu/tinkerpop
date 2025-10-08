@@ -115,12 +115,12 @@ public class Model {
         addCoreEntry(new java.sql.Timestamp(1481750076295L), "Timestamp", "");
         addCoreEntry(UUID.fromString("41d2e28a-20a4-4ab0-b379-d810dede3786"), "UUID");
 
-        addGraphStructureEntry(graph.edges().next(), "Edge", "");
-        addGraphStructureEntry(g.V().out().out().path().next(), "Path", "");
-        addGraphStructureEntry(graph.edges().next().properties().next(), "Property", "");
+        addGraphStructureEntry(graph.edge(13), "Edge", "");
+        addGraphStructureEntry(g.V().hasId(1).out().out().path().next(), "Path", "");
+        addGraphStructureEntry(graph.edge(13).properties().next(), "Property", "");
         addGraphStructureEntry(graph, "TinkerGraph", "`TinkerGraph` has a custom serializer that is registered as part of the `TinkerIoRegistry`.");
-        addGraphStructureEntry(graph.vertices().next(), "Vertex", "");
-        addGraphStructureEntry(graph.vertices().next().properties().next(), "VertexProperty", "");
+        addGraphStructureEntry(graph.vertex(1), "Vertex", "");
+        addGraphStructureEntry(graph.vertex(1).property("name"), "VertexProperty", "");
 
         addGraphProcessEntry(SackFunctions.Barrier.normSack, "Barrier", "");
         addGraphProcessEntry(new Bytecode.Binding("x", 1), "Binding", "A \"Binding\" refers to a `Bytecode.Binding`.");
@@ -153,7 +153,7 @@ public class Model {
         // TextP was only added at 3.4.0 and is not supported with untyped GraphSON of any sort
         addGraphProcessEntry(TextP.containing("ark"), "TextP", "");
         addGraphProcessEntry(createStaticTraversalMetrics(), "TraversalMetrics", "");
-        addGraphProcessEntry(g.V().hasLabel("person").asAdmin().nextTraverser(), "Traverser", "");
+        addGraphProcessEntry(g.V(1).asAdmin().nextTraverser(), "Traverser", "");
 
         final Map<String,Object> requestBindings = new HashMap<>();
         requestBindings.put("x", 1);

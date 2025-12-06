@@ -31,6 +31,7 @@ import scala.Tuple2;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Dean Zhu
@@ -67,7 +68,12 @@ public class SparkMessengerTest extends AbstractSparkTest {
         messenger.sendMessage(orderSrcMessageScope, "a");
         List<Tuple2<Object, String>> outgoingMessages0 = messenger.getOutgoingMessages();
 
-        Assert.assertEquals("a", outgoingMessages0.get(0)._2());
-        Assert.assertNull(outgoingMessages0.get(1)._2());
+        Assert.assertEquals(2, outgoingMessages0.size());
+        List<String> messages = outgoingMessages0.stream()
+                .map(Tuple2::_2)
+                .sorted((a, b) -> a == null ? 1 : (b == null ? -1 : a.compareTo(b)))
+                .collect(Collectors.toList());
+        Assert.assertEquals("a", messages.get(0));
+        Assert.assertNull(messages.get(1));
     }
 }
